@@ -1,8 +1,21 @@
-import type { NextConfig } from "next";
+import { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const config: NextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
+  images: {
+    domains: [],
+    formats: ['image/avif', 'image/webp'],
+  },
+  async rewrites() {
+    return [];
+  },
+  async redirects() {
+    return [];
+  },
+  webpack(config) {
+    return config;
+  },
 };
 
-export default nextConfig;
+export default config;

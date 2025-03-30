@@ -1,113 +1,258 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { useState, useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { Header } from "@/components/layout/Header";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { DocumentationPanel } from "@/components/layout/DocumentationPanel";
+import { CodeEditor } from "@/components/editor/CodeEditor";
+import { ResultsPanel } from "@/components/editor/ResultsPanel";
+import { Toolbar } from "@/components/editor/Toolbar";
+import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { apiRequest } from "@/lib/queryClient";
+import { templates, getTemplateById } from "@/lib/templates";
+import { CodeLanguage, NetworkType, CodeTemplateCategory, ExecutionResult } from "@/shared/schema";
+import { MenuIcon, PanelLeftIcon, PanelRightIcon } from "lucide-react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export default function Playground() {
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
+  const [code, setCode] = useState<string>("");
+  const [filename, setFilename] = useState<string>("attestation.ts");
+  const [language, setLanguage] = useState<CodeLanguage>("typescript");
+  const [network, setNetwork] = useState<NetworkType>("testnet");
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("attestation-basic");
+  const [activeCategory, setActiveCategory] = useState<CodeTemplateCategory>("attestations");
+  const [showDocsPanel, setShowDocsPanel] = useState<boolean>(false);
+  const [showSidebar, setShowSidebar] = useState<boolean>(true);
+  const [activePanel, setActivePanel] = useState<'editor' | 'results'>(isMobile ? 'editor' : 'results');
+  
+  const executeMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/execute", {
+        code,
+        language,
+        network
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        variant: "success",
+        title: "Code executed successfully",
+        description: "Check the results panel for details",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Execution failed",
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+      });
+    }
+  });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  // We're no longer using Monaco Editor, so no need to setup typings
+  // Keep this comment as a placeholder for when we re-implement Monaco
 
-export default function Home() {
+  // Load template code when selected template changes
+  useEffect(() => {
+    const template = getTemplateById(selectedTemplate);
+    if (template) {
+      setCode(template.code);
+      setLanguage(template.language);
+      setFilename(`${template.id}.${template.language === "typescript" ? "ts" : "ts"}`);
+      setActiveCategory(template.category);
+    }
+  }, [selectedTemplate]);
+
+  const handleRun = () => {
+    executeMutation.mutate();
+  };
+
+  const handleSave = () => {
+    toast({
+      title: "Code saved",
+      description: "Your code has been saved",
+    });
+  };
+
+  const handleShare = () => {
+    toast({
+      title: "Share link created",
+      description: "Copy the link from your address bar to share this code",
+    });
+  };
+
+  const handleNew = () => {
+    setSelectedTemplate("custom-template");
+  };
+
+  const handleTemplateChange = (templateId: string) => {
+    setSelectedTemplate(templateId);
+  };
+
+  const handleLanguageChange = (lang: CodeLanguage) => {
+    setLanguage(lang);
+  };
+
+  const handleNetworkChange = (net: NetworkType) => {
+    setNetwork(net);
+  };
+
+  const handleCategoryChange = (category: CodeTemplateCategory) => {
+    setActiveCategory(category);
+    // Select the first template in this category
+    const templatesInCategory = templates.filter(t => t.category === category);
+    if (templatesInCategory.length > 0) {
+      setSelectedTemplate(templatesInCategory[0].id);
+    }
+  };
+
+  const handleExampleSelect = (exampleName: string) => {
+    const template = templates.find(t => t.title === exampleName);
+    if (template) {
+      setSelectedTemplate(template.id);
+    }
+  };
+
+  // Auto-hide sidebar on mobile when executing code (to show results)
+  useEffect(() => {
+    if (isMobile && executeMutation.isPending) {
+      setShowSidebar(false);
+      setActivePanel('results');
+    }
+  }, [executeMutation.isPending, isMobile]);
+
+  // When results come in on mobile, switch to results panel
+  useEffect(() => {
+    if (isMobile && executeMutation.data) {
+      setActivePanel('results');
+    }
+  }, [executeMutation.data, isMobile]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex flex-col h-screen overflow-hidden bg-white">
+      <Header
+        network={network}
+        onNetworkChange={handleNetworkChange}
+        isMobile={isMobile}
+        toggleSidebar={() => setShowSidebar(!showSidebar)}
+        showSidebar={showSidebar}
+      />
+      
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar with slide-in behavior on mobile */}
+        <div 
+          className={`
+            ${isMobile ? (showSidebar ? 'translate-x-0' : '-translate-x-full') : ''} 
+            transition-transform duration-200 ease-in-out
+            ${isMobile ? 'absolute z-30 h-[calc(100%-4rem)] mt-16 shadow-lg' : 'relative'}
+            ${!isMobile && !showSidebar ? 'hidden' : ''}
+          `}
+        >
+          <Sidebar
+            activeCategory={activeCategory}
+            onCategoryChange={handleCategoryChange}
+            onExampleSelect={handleExampleSelect}
+            closeSidebar={() => isMobile && setShowSidebar(false)}
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        
+        {/* Semi-transparent overlay when sidebar is open on mobile */}
+        {isMobile && showSidebar && (
+          <div 
+            className="fixed inset-0 bg-black/20 z-20"
+            onClick={() => setShowSidebar(false)}
+            aria-hidden="true"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        )}
+        
+        <main className="flex-1 flex flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-900">
+          <Toolbar
+            selectedTemplate={selectedTemplate}
+            language={language}
+            onTemplateChange={handleTemplateChange}
+            onLanguageChange={handleLanguageChange}
+            onRun={() => {
+              handleRun();
+              if (isMobile) {
+                setActivePanel('results');
+              }
+            }}
+            onSave={handleSave}
+            onShare={handleShare}
+            onNew={handleNew}
+            isRunning={executeMutation.isPending}
+            isMobile={isMobile}
+            activePanel={activePanel}
+            onPanelChange={setActivePanel}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          
+          {isMobile ? (
+            // On mobile, use a tabbed interface instead of split panels
+            <div className="flex-1 overflow-hidden">
+              <div className={`h-full ${activePanel === 'editor' ? 'block' : 'hidden'}`}>
+                <CodeEditor
+                  code={code}
+                  language={language}
+                  onChange={setCode}
+                  filename={filename}
+                />
+              </div>
+              <div className={`h-full ${activePanel === 'results' ? 'block' : 'hidden'}`}>
+                <ResultsPanel
+                  result={executeMutation.data as ExecutionResult | null}
+                  isLoading={executeMutation.isPending}
+                />
+              </div>
+              
+              {/* Mobile panel switcher */}
+              <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2 bg-white dark:bg-neutral-800 shadow-lg rounded-full border border-neutral-200 dark:border-neutral-700 p-1">
+                <button
+                  onClick={() => setActivePanel('editor')}
+                  className={`p-2 rounded-full ${activePanel === 'editor' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'text-neutral-500 dark:text-neutral-400'}`}
+                >
+                  <PanelLeftIcon className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setActivePanel('results')}
+                  className={`p-2 rounded-full ${activePanel === 'results' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'text-neutral-500 dark:text-neutral-400'}`}
+                >
+                  <PanelRightIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          ) : (
+            // On desktop, use resizable panels
+            <ResizablePanelGroup direction="horizontal" className="flex-1">
+              <ResizablePanel defaultSize={50} minSize={30}>
+                <CodeEditor
+                  code={code}
+                  language={language}
+                  onChange={setCode}
+                  filename={filename}
+                />
+              </ResizablePanel>
+              
+              <ResizableHandle withHandle />
+              
+              <ResizablePanel defaultSize={50} minSize={30}>
+                <ResultsPanel
+                  result={executeMutation.data as ExecutionResult | null}
+                  isLoading={executeMutation.isPending}
+                />
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          )}
+        </main>
+      </div>
+      
+      <DocumentationPanel
+        isOpen={showDocsPanel}
+        onClose={() => setShowDocsPanel(false)}
+        activeCategory={activeCategory}
+      />
     </div>
   );
 }

@@ -1,26 +1,344 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    
+    --radius: 0.5rem;
+
+    --chart-1: 240 5.9% 10%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 198 93% 60%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 334 75% 47%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 142 76% 36%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 142 76% 36%;
   }
 }
 
+/* Custom TrueNetwork theme */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Fix for sidebar navigation */
+.bg-primary-50 {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.text-primary-700 {
+  color: #FF4000 !important;
+}
+
+/* Dropdown fixes - Light mode (default) */
+[data-radix-select-content],
+.SelectContent {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+  z-index: 50 !important;
+}
+
+[data-radix-select-item],
+.SelectItem {
+  color: hsl(var(--popover-foreground)) !important;
+  cursor: pointer !important;
+}
+
+[data-radix-select-item]:hover,
+[data-radix-select-item]:focus,
+.SelectItem:hover,
+.SelectItem:focus {
+  background-color: hsl(var(--accent)) !important;
+}
+
+/* Results/Documentation panel styling */
+.results-panel,
+[role="tablist"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+[role="tab"] {
+  color: hsl(var(--muted-foreground)) !important;
+  border-bottom: 2px solid transparent !important;
+}
+
+[role="tab"][data-state="active"] {
+  color: #FF4000 !important;
+  border-bottom-color: #FF4000 !important;
+}
+
+/* Fix for the Documentation tab showing as orange */
+a:has(.Documentation),
+div:has(> .Documentation) {
+  color: #FF4000 !important;
+  border-bottom-color: #FF4000 !important;
+}
+
+/* Code area styling */
+.editor-container {
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+/* Syntax highlighting colors */
+.token.comment,
+span[class*="comment"] {
+  color: #6a9955 !important; /* Green for comments */
+}
+
+.token.string,
+span[class*="string"] {
+  color: #ce9178 !important; /* Orange-red for strings */
+}
+
+.token.keyword,
+span[class*="keyword"],
+.token.operator,
+span[class*="operator"] {
+  color: #c586c0 !important; /* Purple for keywords */
+}
+
+.token.function,
+span[class*="function"] {
+  color: #dcdcaa !important; /* Yellow for functions */
+}
+
+.token.number,
+span[class*="number"] {
+  color: #b5cea8 !important; /* Light green for numbers */
+}
+
+.token.property,
+span[class*="property"] {
+  color: #9cdcfe !important; /* Light blue for properties */
+}
+
+.token.punctuation,
+span[class*="punctuation"] {
+  color: #d4d4d4 !important; /* Light gray for punctuation */
+}
+
+/* Run button styling */
+button[class*="run-button"],
+button:has(svg[class*="play"]) {
+  background-color: #FF4000 !important;
+  color: white !important;
+}
+
+button[class*="run-button"]:hover,
+button:has(svg[class*="play"]):hover {
+  background-color: #FF1000 !important;
+}
+
+/* Documentation section styling - Light mode (default) */
+.TrueNetwork, .Attestation, .ReputationModel, .Algorithm {
+  background-color: hsl(var(--accent)) !important;
+  color: hsl(var(--accent-foreground)) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+
+/* SDK Reference elements styling */
+code.TrueNetwork, 
+code.Attestation, 
+code.ReputationModel, 
+code.Algorithm {
+  display: inline-block !important;
+  font-family: monospace !important;
+  font-size: 0.9em !important;
+  padding: 2px 6px !important;
+  margin: 2px 0 !important;
+}
+
+/* Console output */
+pre, code, .console-output {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+}
+
+/* Fix for select dropdown visibility */
+[role="listbox"] {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+}
+
+[role="option"] {
+  color: hsl(var(--popover-foreground)) !important;
+}
+
+[role="option"]:hover,
+[role="option"]:focus {
+  background-color: hsl(var(--accent)) !important;
+}
+
+/* Fix for any specific color elements in the documentation - Light mode (default) */
+.documentation-container h1, 
+.documentation-container h2, 
+.documentation-container h3 {
+  color: hsl(var(--foreground)) !important;
+}
+
+.documentation-container p,
+.documentation-container li {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Fixed SDK reference section - Light mode (default) */
+.sdk-reference h2,
+.sdk-reference h3,
+.sdk-reference p {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Fix specifically for the code blocks in SDK Reference */
+.sdk-reference code {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Dark mode specific overrides */
+.dark [data-radix-select-content],
+.dark .SelectContent {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dark [data-radix-select-item],
+.dark .SelectItem {
+  color: hsl(var(--popover-foreground)) !important;
+}
+
+.dark [data-radix-select-item]:hover,
+.dark [data-radix-select-item]:focus,
+.dark .SelectItem:hover,
+.dark .SelectItem:focus {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.dark .documentation-container h1,
+.dark .documentation-container h2,
+.dark .documentation-container h3 {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .documentation-container p,
+.dark .documentation-container li {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .sdk-reference h2,
+.dark .sdk-reference h3,
+.dark .sdk-reference p {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark [role="listbox"] {
+  background-color: hsl(var(--popover)) !important;
+  color: hsl(var(--popover-foreground)) !important;
+}
+
+.dark [role="option"] {
+  color: hsl(var(--popover-foreground)) !important;
+}
+
+.dark [role="option"]:hover,
+.dark [role="option"]:focus {
+  background-color: hsl(var(--accent)) !important;
+}
+
+/* Improve documentation section contrast in dark mode */
+.dark .TrueNetwork,
+.dark .Attestation,
+.dark .ReputationModel,
+.dark .Algorithm {
+  background-color: hsl(var(--accent)) !important;
+  color: hsl(var(--accent-foreground)) !important;
+}
+
+/* Console and code improvements for dark mode */
+.dark pre,
+.dark code,
+.dark .console-output {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
 }
