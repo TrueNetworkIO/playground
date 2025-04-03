@@ -1,7 +1,9 @@
-<div align="center">
-  <img src="/public/true.svg" alt="True Network Logo" style="height: 40px; vertical-align: middle; margin-right: 10px;" />
-  <span style="font-size: 32px; font-weight: bold; vertical-align: middle;">True Network Playground</span>
-</div>
+<table align="center" style="border: 0; border-width: 0; border-style: none; border-spacing: 0; border-collapse: collapse;">
+  <tr style="border: 0; border-width: 0; border-style: none;">
+    <td style="border: 0; border-width: 0; border-style: none; padding-right: 15px;"><img src="/public/true.svg" alt="True Network Logo" width="70"></td>
+    <td style="border: 0; border-width: 0; border-style: none;"><h1>True Network Playground</h1></td>
+  </tr>
+</table>
 
 A powerful interactive environment for experimenting with the True Network SDK directly in your browser.
 
@@ -30,10 +32,6 @@ Get up and running quickly with our starter template that demonstrates a basic f
 - Essential dependencies
 - Working examples of key functionality
 - Ready-to-customize UI components
-
-```js
-npx create-next-app my-app --example https://github.com/truenetworkio/next-starter
-```
 
 ### Option 2: Custom Integration
 
