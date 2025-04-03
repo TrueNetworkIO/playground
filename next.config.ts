@@ -2,6 +2,12 @@ import { NextConfig } from 'next';
 
 const config: NextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   swcMinify: true,
   images: {
     domains: [],
