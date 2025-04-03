@@ -4,12 +4,28 @@ import { getExampleCode } from "./editor";
 // Predefined code templates for the playground
 export const templates: CodeTemplate[] = [
   {
-    id: "attestation-basic",
-    title: "Attestation Example",
+    id: "create-attestation",
+    title: "Create an Attestation",
     description: "Create and issue a basic attestation",
     category: "attestations",
     language: "typescript",
-    code: getExampleCode("Simple Attestation")
+    code: getExampleCode("Create an Attestation")
+  },
+  {
+    id: "update-attestation",
+    title: "Update an Attestation",
+    description: "Update and issue an attestation",
+    category: "attestations",
+    language: "typescript",
+    code: getExampleCode("Update an Attestation")
+  },
+  {
+    id: "read-attestation",
+    title: "Read Attestations",
+    description: "Read all attestations of a user",
+    category: "attestations",
+    language: "typescript",
+    code: getExampleCode("Read Attestations")
   },
   {
     id: "reputation-model",

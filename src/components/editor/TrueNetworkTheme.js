@@ -6,9 +6,9 @@ ace.define('ace/theme/true_network_dark', ['require', 'exports', 'module', 'ace/
   exports.cssClass = 'ace-true-network-dark';
   exports.cssText = `
 .ace-true-network-dark .ace_gutter {
-  background: #061F33;
+  background: #141412;
   color: #8A8A8A;
-  border-right: 1px solid #0A2845;
+  border-right: 1px solid #141412;
 }
 
 .ace-true-network-dark .ace_print-margin {
@@ -17,7 +17,7 @@ ace.define('ace/theme/true_network_dark', ['require', 'exports', 'module', 'ace/
 }
 
 .ace-true-network-dark {
-  background-color: #272C34;
+  background-color: #141412;
   color: #F2F0ED;
   font-family: 'Roboto Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   line-height: 1.5;

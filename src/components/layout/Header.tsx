@@ -78,7 +78,7 @@ export function Header({
       className="border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 z-10 relative"
       data-theme-mode={isDarkMode ? 'dark' : 'light'} // Add this for debugging
     >
-      <div className="h-16 px-4 flex items-center justify-between">
+      <div className="h-16 px-2 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {toggleSidebar && (
             <Button

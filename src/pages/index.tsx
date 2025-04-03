@@ -9,10 +9,11 @@ import { ResultsPanel } from "@/components/editor/ResultsPanel";
 import { Toolbar } from "@/components/editor/Toolbar";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { apiRequest } from "@/lib/queryClient";
 import { templates, getTemplateById } from "@/lib/templates";
-import { CodeLanguage, NetworkType, CodeTemplateCategory, ExecutionResult } from "@/shared/schema";
-import { MenuIcon, PanelLeftIcon, PanelRightIcon } from "lucide-react";
+import { CodeLanguage, NetworkType, CodeTemplateCategory } from "@/shared/schema";
+import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
+import { useScriptRunner } from "@/hooks/useScriptRunner";
+import Head from "next/head";
 
 export default function Playground() {
   const { toast } = useToast();
@@ -21,20 +22,18 @@ export default function Playground() {
   const [filename, setFilename] = useState<string>("attestation.ts");
   const [language, setLanguage] = useState<CodeLanguage>("typescript");
   const [network, setNetwork] = useState<NetworkType>("testnet");
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("attestation-basic");
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("create-attestation");
   const [activeCategory, setActiveCategory] = useState<CodeTemplateCategory>("attestations");
   const [showDocsPanel, setShowDocsPanel] = useState<boolean>(false);
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
   const [activePanel, setActivePanel] = useState<'editor' | 'results'>(isMobile ? 'editor' : 'results');
-  
+
+  const { runScript, logs } = useScriptRunner()
+
   const executeMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/execute", {
-        code,
-        language,
-        network
-      });
-      return response.json();
+      const data = await runScript(code);
+      return {}
     },
     onSuccess: (data) => {
       toast({
@@ -61,20 +60,13 @@ export default function Playground() {
     if (template) {
       setCode(template.code);
       setLanguage(template.language);
-      setFilename(`${template.id}.${template.language === "typescript" ? "ts" : "ts"}`);
+      setFilename(`${template.id}.${template.language === "typescript" ? "ts" : "json"}`);
       setActiveCategory(template.category);
     }
   }, [selectedTemplate]);
 
   const handleRun = () => {
     executeMutation.mutate();
-  };
-
-  const handleSave = () => {
-    toast({
-      title: "Code saved",
-      description: "Your code has been saved",
-    });
   };
 
   const handleShare = () => {
@@ -133,6 +125,16 @@ export default function Playground() {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-white">
+      <Head>
+        <title>Playground | True Network: Make On-Chain Attestations Easily</title>
+        <meta name="description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
+        <meta name="keywords" content="keyword1, keyword2, keyword3" />
+        <meta property="og:title" content="Playground | True Network" />
+        <meta property="og:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:title" content="Playground | True Network" />
+        <meta name="twitter:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
+      </Head>
       <Header
         network={network}
         onNetworkChange={handleNetworkChange}
@@ -140,10 +142,10 @@ export default function Playground() {
         toggleSidebar={() => setShowSidebar(!showSidebar)}
         showSidebar={showSidebar}
       />
-      
+
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar with slide-in behavior on mobile */}
-        <div 
+        <div
           className={`
             ${isMobile ? (showSidebar ? 'translate-x-0' : '-translate-x-full') : ''} 
             transition-transform duration-200 ease-in-out
@@ -158,16 +160,16 @@ export default function Playground() {
             closeSidebar={() => isMobile && setShowSidebar(false)}
           />
         </div>
-        
+
         {/* Semi-transparent overlay when sidebar is open on mobile */}
         {isMobile && showSidebar && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/20 z-20"
             onClick={() => setShowSidebar(false)}
             aria-hidden="true"
           />
         )}
-        
+
         <main className="flex-1 flex flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-900">
           <Toolbar
             selectedTemplate={selectedTemplate}
@@ -180,7 +182,6 @@ export default function Playground() {
                 setActivePanel('results');
               }
             }}
-            onSave={handleSave}
             onShare={handleShare}
             onNew={handleNew}
             isRunning={executeMutation.isPending}
@@ -188,13 +189,19 @@ export default function Playground() {
             activePanel={activePanel}
             onPanelChange={setActivePanel}
           />
-          
+
           {isMobile ? (
             // On mobile, use a tabbed interface instead of split panels
             <div className="flex-1 overflow-hidden">
               <div className={`h-full ${activePanel === 'editor' ? 'block' : 'hidden'}`}>
                 <CodeEditor
                   code={code}
+                  onRun={() => {
+                    handleRun();
+                    if (isMobile) {
+                      setActivePanel('results');
+                    }
+                  }}
                   language={language}
                   onChange={setCode}
                   filename={filename}
@@ -202,11 +209,11 @@ export default function Playground() {
               </div>
               <div className={`h-full ${activePanel === 'results' ? 'block' : 'hidden'}`}>
                 <ResultsPanel
-                  result={executeMutation.data as ExecutionResult | null}
+                  result={logs}
                   isLoading={executeMutation.isPending}
                 />
               </div>
-              
+
               {/* Mobile panel switcher */}
               <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2 bg-white dark:bg-neutral-800 shadow-lg rounded-full border border-neutral-200 dark:border-neutral-700 p-1">
                 <button
@@ -229,17 +236,23 @@ export default function Playground() {
               <ResizablePanel defaultSize={50} minSize={30}>
                 <CodeEditor
                   code={code}
+                  onRun={() => {
+                    handleRun();
+                    if (isMobile) {
+                      setActivePanel('results');
+                    }
+                  }}
                   language={language}
                   onChange={setCode}
                   filename={filename}
                 />
               </ResizablePanel>
-              
+
               <ResizableHandle withHandle />
-              
+
               <ResizablePanel defaultSize={50} minSize={30}>
                 <ResultsPanel
-                  result={executeMutation.data as ExecutionResult | null}
+                  result={logs}
                   isLoading={executeMutation.isPending}
                 />
               </ResizablePanel>
@@ -247,7 +260,7 @@ export default function Playground() {
           )}
         </main>
       </div>
-      
+
       <DocumentationPanel
         isOpen={showDocsPanel}
         onClose={() => setShowDocsPanel(false)}

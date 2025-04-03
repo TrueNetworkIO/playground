@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { CodeIcon, VerifiedIcon, BarChartIcon, BookOpenIcon, SettingsIcon, FileCodeIcon, HelpCircleIcon } from "lucide-react";
+import { CodeIcon, VerifiedIcon, BarChartIcon, BookOpenIcon, Twitter, FileCodeIcon, LucideGroup } from "lucide-react";
 import { CodeTemplateCategory } from "@/shared/schema";
 
 interface SidebarProps {
-  activeCategory: CodeTemplateCategory;
-  onCategoryChange: (category: CodeTemplateCategory) => void;
-  onExampleSelect: (exampleName: string) => void;
-  closeSidebar?: () => void;
+  readonly activeCategory: CodeTemplateCategory;
+  readonly onCategoryChange: (category: CodeTemplateCategory) => void;
+  readonly onExampleSelect: (exampleName: string) => void;
+  readonly closeSidebar?: () => void;
 }
 
 export function Sidebar({ activeCategory, onCategoryChange, onExampleSelect, closeSidebar }: SidebarProps) {
@@ -130,26 +130,26 @@ export function Sidebar({ activeCategory, onCategoryChange, onExampleSelect, clo
           
           <ul className="space-y-1">
             <li>
-              <button className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+              <a href="https://docs.truenetwork.io" target="_blank" className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
                 <BookOpenIcon className="h-4 w-4 mr-2 text-neutral-400 dark:text-neutral-500" />
                 Documentation
-              </button>
+              </a>
             </li>
             <li>
-              <button className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
-                <HelpCircleIcon className="h-4 w-4 mr-2 text-neutral-400 dark:text-neutral-500" />
-                Help & Support
-              </button>
+              <a href="https://at.truenetwork.io/community" target="_blank" className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+                <LucideGroup className="h-4 w-4 mr-2 text-neutral-400 dark:text-neutral-500" />
+                Dev Community
+              </a>
             </li>
           </ul>
         </div>
       </div>
       
       <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
-        <button className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
-          <SettingsIcon className="h-4 w-4 mr-2" />
-          Settings
-        </button>
+        <a href="https://x.com/truenetworkio" target="_blank" className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+          <Twitter className="h-4 w-4 mr-2" />
+          Follow Us
+        </a>
       </div>
     </nav>
   );

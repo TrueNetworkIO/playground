@@ -1,5 +1,94 @@
 export const getExampleCode = (templateName: string): string => {
   switch (templateName) {
+    case 'Create an Attestation':
+      return `// Importing the trueApi from the helper function.
+const trueApi = await getTrueNetworkInstance();
+
+// User wallet address, could be any: EVM, Solana, DOT.
+const userWalletAddress = 'nJrsrH8dov9Z36kTDpabgCZT8CbK1FbmjJvfU6qbMTG4g4c';
+
+// IPFS CID: an example usage for schema property.
+const ipfsCid = 'baguqeerasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea';
+
+const userSignupSchema = Schema.create({
+  name: Text,
+  dateOfRegistry: U64,
+  profileCid: Text
+})
+
+// Attesting to the user.
+const response = await userSignupSchema.attest(
+    trueApi,
+    userWalletAddress,
+    {
+      name: "Ram",
+      dateOfRegistry: Date.now(),
+      profileCid: ipfsCid
+    }
+  );
+
+// Return the response for viewing in the side window.
+return response;
+`;
+
+    case 'Update an Attestation':
+      return `// Importing the trueApi from the helper function.
+const trueApi = await getTrueNetworkInstance();
+
+// User wallet address, could be any: EVM, Solana, DOT.
+const userWalletAddress = 'nJrsrH8dov9Z36kTDpabgCZT8CbK1FbmjJvfU6qbMTG4g4c';
+
+// IPFS CID: updated value to change in the attestation.
+const ipfsCid = 'bafyreicnokmhmrnlp2wjhyk2haep4tqxiptwfrp2rrs7rzq7uk766chqvq';
+
+// Attestation to update on-chain.
+const attestationIndex = 0;
+
+const userSignupSchema = Schema.create({
+  name: Text,
+  dateOfRegistry: U64,
+  profileCid: Text
+})
+
+// Attesting to the user.
+const response = await userSignupSchema.updateAttestation(
+    trueApi,
+    userWalletAddress,
+    attestationIndex,
+    {
+      name: "Ram",
+      dateOfRegistry: Date.now(),
+      profileCid: ipfsCid
+    }
+  );
+
+// Return the response for viewing in the side window.
+return response;
+`;
+
+    case 'Read Attestations':
+      return `// Importing the trueApi from the helper function.
+const trueApi = await getTrueNetworkInstance();
+
+// User wallet address, could be any: EVM, Solana, DOT.
+const userWalletAddress = 'nJrsrH8dov9Z36kTDpabgCZT8CbK1FbmjJvfU6qbMTG4g4c';
+
+const userSignupSchema = Schema.create({
+  name: Text,
+  dateOfRegistry: U64,
+  profileCid: Text
+})
+
+// Attesting to the user.
+const response = await userSignupSchema.getAttestations(
+    trueApi,
+    userWalletAddress
+  );
+
+// Return the response for viewing in the side window.
+return response;
+`;
+
     case 'Simple Attestation':
       return `// Import True Network SDK
 import { TrueNetwork, Attestation } from '@true-network/sdk';

@@ -14,6 +14,7 @@ import 'brace/mode/typescript';
 interface CodeEditorProps {
   code: string;
   language: CodeLanguage;
+  onRun: () => void;
   onChange: (value: string) => void;
   filename: string;
   onCloseTab?: () => void;
@@ -24,6 +25,7 @@ export function CodeEditor({
   language,
   onChange,
   filename,
+  onRun,
   onCloseTab
 }: CodeEditorProps) {
 
@@ -82,7 +84,7 @@ export function CodeEditor({
                 win: "Ctrl-Enter",
                 mac: "Cmd-Enter"
               },
-              exec: () => { }
+              exec: () => onRun()
             }]}
             setOptions={{
               enableBasicAutocompletion: true,

@@ -25,7 +25,6 @@ interface ToolbarProps {
   onTemplateChange: (template: string) => void;
   onLanguageChange: (language: CodeLanguage) => void;
   onRun: () => void;
-  onSave: () => void;
   onShare: () => void;
   onNew: () => void;
   isRunning: boolean;
@@ -57,7 +56,7 @@ export function Toolbar({
             {/* Template select dropdown */}
             <div className="relative">
               <Select value={selectedTemplate} onValueChange={onTemplateChange}>
-                <SelectTrigger className="w-[130px] h-9 text-sm text-black dark:bg-neutral-800 border-neutral-700 dark:text-neutral-200">
+                <SelectTrigger className="w-[160px] h-9 text-sm text-black dark:bg-neutral-800 border-neutral-700 dark:text-neutral-200">
                   <SelectValue placeholder="Template" />
                 </SelectTrigger>
                 <SelectContent>
