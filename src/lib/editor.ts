@@ -88,100 +88,55 @@ const response = await userSignupSchema.getAttestations(
 // Return the response for viewing in the side window.
 return response;
 `;
+    case 'Get Reputation Score':
+      return `// Importing the trueApi from the helper function.
+const trueApi = await getTrueNetworkInstance();
 
-    case 'Simple Attestation':
-      return `// Import True Network SDK
-import { TrueNetwork, Attestation } from '@true-network/sdk';
+// Algorithm Id to get the reputation score.
+const algoId = 158;
 
-/**
- * This example demonstrates creating and issuing a basic attestation
- * to a blockchain address using the True Network protocol.
- */
+// User wallet address, could be any: EVM, Solana, DOT.
+const userWalletAddress = 'nJrsrH8dov9Z36kTDpabgCZT8CbK1FbmjJvfU6qbMTG4g4c';
 
-// Initialize the True Network client
-const trueNetwork = new TrueNetwork({
-  network: 'testnet',
-  apiKey: 'YOUR_API_KEY'
-});
+const reputation = await trueApi.getReputationScore(algoId, userWalletAddress);
 
-// Create a new attestation
-async function createAttestation() {
-  const attestation = new Attestation({
-    issuer: '0x1234567890abcdef1234567890abcdef12345678',
-    subject: '0xabcdef1234567890abcdef1234567890abcdef12',
-    property: 'trust.rating',
-    value: 85,
-    expirationTime: Math.floor(Date.now() / 1000) + 86400 // 24 hours
-  });
-  
-  // Issue the attestation on-chain
-  const result = await trueNetwork.issueAttestation(attestation);
-  return result;
-}
+// Return the response for viewing in the side window.
+return reputation;`;
 
-export default createAttestation;`;
+    case 'Get Free Balance':
+      return `// Importing the trueApi from the helper function.
+const trueApi = await getTrueNetworkInstance();
 
-    case 'Weighted Score':
-      return `// Import True Network SDK
-import { TrueNetwork, ReputationModel } from '@true-network/sdk';
+// User wallet address, could be any: EVM, Solana, DOT.
+const userWalletAddress = 'nJrsrH8dov9Z36kTDpabgCZT8CbK1FbmjJvfU6qbMTG4g4c';
 
-/**
- * This example demonstrates creating a reputation model
- * that computes weighted scores based on attestations.
- */
+const balance = await trueApi.getBalance(userWalletAddress);
 
-// Initialize the True Network client
-const trueNetwork = new TrueNetwork({
-  network: 'testnet',
-  apiKey: 'YOUR_API_KEY'
-});
+// Return the response for viewing in the side window.
+return balance;`;
 
-// Create a reputation model
-async function createReputationModel() {
-  const model = new ReputationModel({
-    name: 'Weighted Trust Score',
-    description: 'Computes trust scores with configurable weights for different attestation types',
-    parameters: {
-      weights: {
-        'trust.rating': 0.6,
-        'identity.verified': 0.3,
-        'activity.score': 0.1
-      },
-      threshold: 50,
-      decayRate: 0.05 // 5% decay per month
-    },
-    algorithm: \`
-      function computeScore(attestations, params) {
-        let totalScore = 0;
-        let totalWeight = 0;
-        
-        for (const att of attestations) {
-          const weight = params.weights[att.property] || 0;
-          if (weight > 0) {
-            totalWeight += weight;
-            totalScore += att.value * weight;
-          }
-        }
-        
-        return totalWeight > 0 ? totalScore / totalWeight : 0;
-      }
-    \`
-  });
-  
-  // Deploy the model to the network
-  const result = await model.deploy();
-  
-  // Compute scores for some addresses
-  const scores = await model.computeScores([
-    '0x1234567890abcdef1234567890abcdef12345678',
-    '0xabcdef1234567890abcdef1234567890abcdef12',
-    '0x7890abcdef1234567890abcdef1234567890abcd'
-  ]);
-  
-  return { modelId: result.id, scores };
-}
+    case 'String To Hash':
+      return `// Any random string to get the hash.
+const randomString = 'ABCDEFHGHIJKLMNOPQRSTUVWXYZ';
 
-export default createReputationModel;`;
+const hash = '0x' + stringToBlakeTwo256Hash(randomString);
+
+// Return the response for viewing in the side window.
+return hash;`;
+
+
+    case 'Get Schema Hash':
+      return `// Using a simple schema object.
+const userSignupSchema = Schema.create({
+  name: Text,
+  dateOfRegistry: U64,
+  profileCid: Text
+})
+
+const hash = userSignupSchema.getSchemaHash();
+
+// Return the response for viewing in the side window.
+return hash;`;
 
     case 'Trust Algorithm':
       return `// Import True Network SDK

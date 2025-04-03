@@ -102,7 +102,7 @@ export default function Playground() {
   };
 
   const handleExampleSelect = (exampleName: string) => {
-    const template = templates.find(t => t.title === exampleName);
+    const template = templates.find(t => t.id === exampleName);
     if (template) {
       setSelectedTemplate(template.id);
     }
@@ -173,17 +173,14 @@ export default function Playground() {
         <main className="flex-1 flex flex-col overflow-hidden bg-neutral-50 dark:bg-neutral-900">
           <Toolbar
             selectedTemplate={selectedTemplate}
-            language={language}
             onTemplateChange={handleTemplateChange}
-            onLanguageChange={handleLanguageChange}
+            activeCategory={activeCategory}
             onRun={() => {
               handleRun();
               if (isMobile) {
                 setActivePanel('results');
               }
             }}
-            onShare={handleShare}
-            onNew={handleNew}
             isRunning={executeMutation.isPending}
             isMobile={isMobile}
             activePanel={activePanel}

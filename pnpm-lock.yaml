@@ -108,8 +108,8 @@ importers:
         specifier: ^5.60.5
         version: 5.70.0(react@19.1.0)
       '@truenetworkio/sdk':
-        specifier: ^0.0.19
-        version: 0.0.19
+        specifier: ^0.0.21
+        version: 0.0.21
       '@truenetworkio/ui':
         specifier: ^0.0.1
         version: 0.0.1
@@ -1555,6 +1555,9 @@ packages:
 
   '@truenetworkio/sdk@0.0.19':
     resolution: {integrity: sha512-SfSVoFu19FlfnvmLDu9TP3slw3sU84lwQ2z/nDk8VupKPBDOO/xsQaj3D5YD/AUzh6TJIpMY867bFgtNXPovRw==}
+
+  '@truenetworkio/sdk@0.0.21':
+    resolution: {integrity: sha512-wFkoxK4vei3/iPrMGkM3Stz7UEP4VN02dJUO6BJPF8Y1HZ6TT9LulDc6ctLAe6q4UZ38GWsy+GNa38xD1XNXwQ==}
 
   '@truenetworkio/ui@0.0.1':
     resolution: {integrity: sha512-Lh17LjnvDesmd2WuV6L1Qdl/S5bquHbtdGzygKIRnaAH4BNeOvKhvBQkl8x9NR4s38edjJNLRVNfaOkL9zY/pw==}
@@ -5287,6 +5290,16 @@ snapshots:
   '@tanstack/virtual-core@3.13.5': {}
 
   '@truenetworkio/sdk@0.0.19':
+    dependencies:
+      '@polkadot/api': 14.3.1
+      blakejs: 1.2.1
+      crypto: 1.0.1
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@truenetworkio/sdk@0.0.21':
     dependencies:
       '@polkadot/api': 14.3.1
       blakejs: 1.2.1

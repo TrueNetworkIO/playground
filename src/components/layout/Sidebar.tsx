@@ -14,9 +14,9 @@ export function Sidebar({ activeCategory, onCategoryChange, onExampleSelect, clo
   const [searchQuery, setSearchQuery] = useState("");
   
   const examples = [
-    { name: "Simple Attestation", category: "attestations" as CodeTemplateCategory },
-    { name: "Weighted Score", category: "reputation" as CodeTemplateCategory },
-    { name: "Trust Algorithm", category: "algorithms" as CodeTemplateCategory }
+    { name: "Fetch Attestations", id: 'read-attestation', category: "attestations" as CodeTemplateCategory },
+    { name: "Get Reputation", id: 'get-reputation-score', category: "reputation" as CodeTemplateCategory },
+    { name: "Fetch Balance", id: 'get-free-balance', category: "algorithms" as CodeTemplateCategory }
   ];
   
   const filteredExamples = examples.filter(example => 
@@ -97,7 +97,7 @@ export function Sidebar({ activeCategory, onCategoryChange, onExampleSelect, clo
                 }`}
               >
                 <CodeIcon className={`h-4 w-4 mr-2 ${activeCategory === "utility" ? "text-primary-600 dark:text-primary-400" : ""}`} />
-                Algorithms
+                Utilities
               </button>
             </li>
           </ul>
@@ -112,7 +112,7 @@ export function Sidebar({ activeCategory, onCategoryChange, onExampleSelect, clo
             {filteredExamples.map((example) => (
               <li key={example.name}>
                 <button
-                  onClick={() => handleExampleSelect(example.name)}
+                  onClick={() => handleExampleSelect(example.id)}
                   className="sidebar-item cursor-pointer flex items-center px-3 py-2 text-sm rounded-md w-full text-left text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 >
                   <FileCodeIcon className="h-4 w-4 mr-2 text-neutral-400 dark:text-neutral-500" />

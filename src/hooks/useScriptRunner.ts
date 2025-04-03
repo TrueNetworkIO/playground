@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Schema, U8, U16, U32, U64, F32, F64, Hash, Text, I16, I64, I32, I8, Char, bytesToBlakeTwo256Hash, stringToBlakeTwo256Hash, getFreeBalance, toTrueNetworkAddress, } from "@truenetworkio/sdk"
+import { Schema, U8, U16, U32, U64, F32, F64, Hash, Text, I16, I64, I32, I8, Char, bytesToBlakeTwo256Hash, stringToBlakeTwo256Hash, getFreeBalance, toTrueNetworkAddress } from "@truenetworkio/sdk"
 import { getTrueNetworkInstance } from "../../true-network/true.config"
 
 export enum LogStatus {
@@ -80,9 +80,10 @@ export const useScriptRunner = () => {
   const [logs, setLogs] = useState<Log[]>([])
 
   const addLog = (message: string, status: LogStatus) => {
+    const removingLeadingNewLine = message.replace(/^\n/, '');
     const newLog: Log = {
       id: Date.now().toString(),
-      message,
+      message: removingLeadingNewLine,
       timestamp: Date.now(),
       status,
     }

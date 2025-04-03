@@ -28,28 +28,36 @@ export const templates: CodeTemplate[] = [
     code: getExampleCode("Read Attestations")
   },
   {
-    id: "reputation-model",
-    title: "Basic Reputation Model",
-    description: "Create a reputation model with configurable weights",
+    id: "get-reputation-score",
+    title: "Get Reputation Score",
+    description: "Get the reputation score of a user",
     category: "reputation",
     language: "typescript",
-    code: getExampleCode("Weighted Score")
+    code: getExampleCode("Get Reputation Score")
   },
   {
-    id: "trust-algorithm",
-    title: "Trust Algorithm",
-    description: "Implement a custom algorithm for computing trust scores",
+    id: "get-free-balance",
+    title: "Get Free Balance",
+    description: "Get the free balance of a user",
     category: "utility",
     language: "typescript",
-    code: getExampleCode("Trust Algorithm")
+    code: getExampleCode("Get Free Balance")
   },
   {
-    id: "custom-template",
-    title: "Custom Template",
-    description: "Start with a blank template",
-    category: "attestations",
-    language: "typescript",
-    code: getExampleCode("")
+    id: 'string-to-hash',
+    title: 'String To Hash',
+    description: 'Convert a string to a hash',
+    category: 'utility',
+    language: 'typescript',
+    code: getExampleCode('String To Hash')
+  },
+  {
+    id: 'get-schema-hash',
+    title: 'Get Schema Hash',
+    description: 'Get the hash of a schema',
+    category: 'utility',
+    language: 'typescript',
+    code: getExampleCode('Get Schema Hash')
   }
 ];
 

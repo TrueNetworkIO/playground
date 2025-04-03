@@ -120,7 +120,7 @@ export function Header({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem className="cursor-pointer" value="testnet">Raman Testnet</SelectItem>
-                <SelectItem className="cursor-pointer" value="mainnet">Bose Network</SelectItem>
+                {/* <SelectItem className="cursor-pointer" value="mainnet">Bose Network</SelectItem> */}
               </SelectContent>
             </Select>
           </div>
