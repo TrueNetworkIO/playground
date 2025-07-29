@@ -134,10 +134,11 @@ export default function Playground() {
         <meta property="og:type" content="website" />
         <meta name="twitter:title" content="Playground | True Network" />
         <meta name="twitter:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
-        <meta property="og:image" content="/public/og.png" />
+        <meta property="og:image" content="/og.png" />
         <meta property="og:image:alt" content="True Network Playground - Experiment with On-Chain Attestations & Reputation Easily" />
-        <meta name="twitter:image" content="/public/og.png" />
+        <meta name="twitter:image" content="/og.png" />
         <meta name="twitter:image:alt" content="True Network Playground - Experiment with On-Chain Attestations & Reputation Easily" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Header
         network={network}
