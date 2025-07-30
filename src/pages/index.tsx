@@ -14,10 +14,21 @@ import { CodeLanguage, NetworkType, CodeTemplateCategory } from "@/shared/schema
 import { PanelLeftIcon, PanelRightIcon } from "lucide-react";
 import { useScriptRunner } from "@/hooks/useScriptRunner";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function Playground() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const router = useRouter();
+
+  // Get the current domain for absolute URLs in meta tags
+  const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+      return `${window.location.protocol}//${window.location.host}`;
+    }
+    // Fallback for SSR
+    return 'https://playground.truenetwork.io';
+  };
   const [code, setCode] = useState<string>("");
   const [filename, setFilename] = useState<string>("attestation.ts");
   const [language, setLanguage] = useState<CodeLanguage>("typescript");
@@ -123,22 +134,40 @@ export default function Playground() {
     }
   }, [executeMutation.data, isMobile]);
 
+  const baseUrl = getBaseUrl();
+  const ogImageUrl = `${baseUrl}/og.png`;
+  const pageUrl = `${baseUrl}${router.asPath}`;
+
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-white">
       <Head>
         <title>Playground | True Network: Make On-Chain Attestations Easily</title>
         <meta name="description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
-        <meta name="keywords" content="keyword1, keyword2, keyword3" />
-        <meta property="og:title" content="Playground | True Network" />
-        <meta property="og:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
+        <meta name="keywords" content="blockchain, attestations, reputation, true network, web3, playground, code snippets" />
+        
+        {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta name="twitter:title" content="Playground | True Network" />
-        <meta name="twitter:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
-        <meta property="og:image" content="/og.png" />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:title" content="Playground | True Network: Make On-Chain Attestations Easily" />
+        <meta property="og:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1536" />
+        <meta property="og:image:height" content="1024" />
         <meta property="og:image:alt" content="True Network Playground - Experiment with On-Chain Attestations & Reputation Easily" />
-        <meta name="twitter:image" content="/og.png" />
-        <meta name="twitter:image:alt" content="True Network Playground - Experiment with On-Chain Attestations & Reputation Easily" />
+        <meta property="og:site_name" content="True Network" />
+        
+        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={pageUrl} />
+        <meta name="twitter:title" content="Playground | True Network: Make On-Chain Attestations Easily" />
+        <meta name="twitter:description" content="True Network Playground comprises of on-chain attestations & reputation code snippets that you can run in realtime." />
+        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:image:alt" content="True Network Playground - Experiment with On-Chain Attestations & Reputation Easily" />
+        
+        {/* Additional Meta Tags */}
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="True Network" />
+        <link rel="canonical" href={pageUrl} />
       </Head>
       <Header
         network={network}
